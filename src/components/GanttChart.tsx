@@ -314,7 +314,7 @@ export const GanttChart: FC<GanttChartProps> = ({
             </div>
             <Card className="h-fit">
                 <CardContent className="p-6 overflow-hidden">
-                    <div className="gantt-container">
+                    <div className="gantt-container" ref={scrollContainerRef}>
                         <div className="labels-column">
                             <div className="labels-header">
                                 <Label className="font-semibold">Tasks</Label>
@@ -324,230 +324,229 @@ export const GanttChart: FC<GanttChartProps> = ({
                                 className="labels-content"
                                 ref={labelsContentRef}
                             >
-                                {/* Phase color bands for expanded phases */}
-                                <AnimatePresence>
-                                    {visibleTasks
-                                        .filter(
-                                            (task) =>
-                                                task.type === "phase" &&
-                                                task.isExpanded
-                                        )
-                                        .map((phase) => {
-                                            const childTasks =
-                                                visibleTasks.filter(
-                                                    (t) =>
-                                                        t.parentId === phase.id
-                                                );
-                                            const bandHeight =
-                                                childTasks.reduce(
-                                                    (total, task) =>
-                                                        total +
-                                                        getTaskHeight(
-                                                            task.level,
-                                                            task
-                                                        ),
-                                                    0
-                                                ) - 4; // Slightly smaller to prevent overlap
-
-                                            // Calculate position based on filtered tasks (without expanded phases)
-                                            const filteredTasks =
-                                                visibleTasks.filter(
-                                                    (task) =>
-                                                        !(
-                                                            task.type ===
-                                                                "phase" &&
-                                                            task.isExpanded
-                                                        )
-                                                );
-                                            const firstChildIndex =
-                                                filteredTasks.findIndex(
-                                                    (t) =>
-                                                        t.parentId === phase.id
-                                                );
-                                            let bandTop = 0;
-                                            if (firstChildIndex >= 0) {
-                                                for (
-                                                    let i = 0;
-                                                    i < firstChildIndex;
-                                                    i++
-                                                ) {
-                                                    bandTop += getTaskHeight(
-                                                        filteredTasks[i].level,
-                                                        filteredTasks[i]
+                                {/* Individual element animations */}
+                                <div className="relative w-full">
+                                    {/* Phase color bands for expanded phases */}
+                                    <AnimatePresence>
+                                        {visibleTasks
+                                            .filter(
+                                                (task) =>
+                                                    task.type === "phase" &&
+                                                    task.isExpanded
+                                            )
+                                            .map((phase) => {
+                                                const childTasks =
+                                                    visibleTasks.filter(
+                                                        (t) =>
+                                                            t.parentId ===
+                                                            phase.id
                                                     );
-                                                }
-                                            }
+                                                const bandHeight =
+                                                    childTasks.reduce(
+                                                        (total, task) =>
+                                                            total +
+                                                            getTaskHeight(
+                                                                task.level,
+                                                                task
+                                                            ),
+                                                        0
+                                                    ) - 4; // Slightly smaller to prevent overlap
 
-                                            return (
+                                                // Calculate position based on filtered tasks (without expanded phases)
+                                                const filteredTasks =
+                                                    visibleTasks.filter(
+                                                        (task) =>
+                                                            !(
+                                                                task.type ===
+                                                                    "phase" &&
+                                                                task.isExpanded
+                                                            )
+                                                    );
+                                                const firstChildIndex =
+                                                    filteredTasks.findIndex(
+                                                        (t) =>
+                                                            t.parentId ===
+                                                            phase.id
+                                                    );
+                                                let bandTop = 0;
+                                                if (firstChildIndex >= 0) {
+                                                    for (
+                                                        let i = 0;
+                                                        i < firstChildIndex;
+                                                        i++
+                                                    ) {
+                                                        bandTop +=
+                                                            getTaskHeight(
+                                                                filteredTasks[i]
+                                                                    .level,
+                                                                filteredTasks[i]
+                                                            );
+                                                    }
+                                                }
+
+                                                return (
+                                                    <motion.div
+                                                        key={`band-${phase.id}`}
+                                                        initial={{
+                                                            scaleX: 0,
+                                                            originX: 0,
+                                                        }}
+                                                        animate={{
+                                                            scaleX: 1,
+                                                            originX: 0,
+                                                            transition: {
+                                                                delay: 0.2,
+                                                                duration: 0.2,
+                                                            },
+                                                        }}
+                                                        whileHover={{
+                                                            opacity: 0.8,
+                                                            scaleX: 1.3,
+                                                        }}
+                                                        whileTap={{
+                                                            scale: 0.95,
+                                                        }}
+                                                        className="phase-color-band clickable-band"
+                                                        onClick={() =>
+                                                            onToggleExpand(
+                                                                phase.id
+                                                            )
+                                                        }
+                                                        style={{
+                                                            position:
+                                                                "absolute",
+                                                            left: 0,
+                                                            top: `${bandTop}px`,
+                                                            width: 12,
+                                                            height: `${bandHeight}px`,
+                                                            backgroundColor:
+                                                                phase.color,
+                                                            zIndex: 25,
+                                                            cursor: "pointer",
+                                                        }}
+                                                        title={`Click to collapse ${phase.name}`}
+                                                    />
+                                                );
+                                            })}
+                                    </AnimatePresence>
+
+                                    {/* Task labels */}
+                                    <AnimatePresence>
+                                        {visibleTasks
+                                            .filter(
+                                                (task) =>
+                                                    !(
+                                                        task.type === "phase" &&
+                                                        task.isExpanded
+                                                    )
+                                            )
+                                            .map((task, index) => (
                                                 <motion.div
-                                                    key={`band-${phase.id}`}
+                                                    key={task.id}
                                                     initial={{
                                                         opacity: 0,
-                                                        width: 0,
+                                                        y: -10,
                                                     }}
                                                     animate={{
-                                                        opacity: 0.6,
-                                                        width: 12,
+                                                        opacity: 1,
+                                                        y: 0,
+                                                        transition: {
+                                                            delay: 0.1,
+                                                            duration: 0.2,
+                                                        },
                                                     }}
-                                                    exit={{
-                                                        opacity: 0,
-                                                        width: 0,
-                                                    }}
-                                                    transition={{
-                                                        duration: 0.4,
-                                                        ease: "easeInOut",
-                                                    }}
-                                                    whileHover={{
-                                                        opacity: 0.8,
-                                                        width: 16,
-                                                    }}
-                                                    whileTap={{ scale: 0.95 }}
-                                                    className="phase-color-band clickable-band"
-                                                    onClick={() =>
-                                                        onToggleExpand(phase.id)
-                                                    }
+                                                    className={`task-label-row level-${
+                                                        task.level
+                                                    } ${task.type}-label-row${
+                                                        task.type === "phase" &&
+                                                        task.isExpanded
+                                                            ? " expanded"
+                                                            : ""
+                                                    }`}
                                                     style={{
-                                                        position: "absolute",
-                                                        left: 0,
-                                                        top: `${bandTop}px`,
-                                                        height: `${bandHeight}px`,
-                                                        backgroundColor:
-                                                            phase.color,
-                                                        zIndex: 25,
-                                                        cursor: "pointer",
-                                                    }}
-                                                    title={`Click to collapse ${phase.name}`}
-                                                />
-                                            );
-                                        })}
-                                </AnimatePresence>
-
-                                <AnimatePresence mode="popLayout">
-                                    {visibleTasks
-                                        .filter(
-                                            (task) =>
-                                                !(
-                                                    task.type === "phase" &&
-                                                    task.isExpanded
-                                                )
-                                        )
-                                        .map((task, index) => (
-                                            <motion.div
-                                                key={task.id}
-                                                layout="position"
-                                                initial={{
-                                                    opacity: 0,
-                                                    x: -15,
-                                                    scale: 0.95,
-                                                }}
-                                                animate={{
-                                                    opacity: 1,
-                                                    x: 0,
-                                                    scale: 1,
-                                                }}
-                                                exit={{
-                                                    opacity: 0,
-                                                    x: -15,
-                                                    scale: 0.95,
-                                                }}
-                                                transition={{
-                                                    duration: 0.2,
-                                                    ease: [0.4, 0.0, 0.2, 1],
-                                                    layout: {
-                                                        duration: 0.25,
-                                                        ease: [
-                                                            0.4, 0.0, 0.2, 1,
-                                                        ],
-                                                    },
-                                                }}
-                                                className={`task-label-row level-${
-                                                    task.level
-                                                } ${task.type}-label-row${
-                                                    task.type === "phase" &&
-                                                    task.isExpanded
-                                                        ? " expanded"
-                                                        : ""
-                                                }`}
-                                                style={{
-                                                    top: `${(() => {
-                                                        // Calculate position based on filtered tasks
-                                                        const filteredTasks =
-                                                            visibleTasks.filter(
-                                                                (task) =>
-                                                                    !(
-                                                                        task.type ===
-                                                                            "phase" &&
-                                                                        task.isExpanded
-                                                                    )
-                                                            );
-                                                        let position = 0;
-                                                        for (
-                                                            let i = 0;
-                                                            i < index;
-                                                            i++
-                                                        ) {
-                                                            position +=
-                                                                getTaskHeight(
-                                                                    filteredTasks[
-                                                                        i
-                                                                    ].level,
-                                                                    filteredTasks[
-                                                                        i
-                                                                    ]
+                                                        top: `${(() => {
+                                                            // Calculate position based on filtered tasks
+                                                            const filteredTasks =
+                                                                visibleTasks.filter(
+                                                                    (task) =>
+                                                                        !(
+                                                                            task.type ===
+                                                                                "phase" &&
+                                                                            task.isExpanded
+                                                                        )
                                                                 );
-                                                        }
-                                                        return position;
-                                                    })()}px`,
-                                                    height: `${getTaskHeight(
-                                                        task.level,
-                                                        task
-                                                    )}px`,
-                                                    ...(task.type === "phase" &&
-                                                    !task.isExpanded
-                                                        ? {
-                                                              backgroundColor: `${task.color}20`, // 20% opacity
-                                                              borderLeft: `3px solid ${task.color}`,
-                                                          }
-                                                        : {}),
-                                                }}
-                                            >
-                                                <div
-                                                    className="task-label-content"
-                                                    style={{
-                                                        paddingLeft: `${
-                                                            task.level === 0
-                                                                ? 15
-                                                                : 15
-                                                        }px`,
+                                                            let position = 0;
+                                                            for (
+                                                                let i = 0;
+                                                                i < index;
+                                                                i++
+                                                            ) {
+                                                                position +=
+                                                                    getTaskHeight(
+                                                                        filteredTasks[
+                                                                            i
+                                                                        ].level,
+                                                                        filteredTasks[
+                                                                            i
+                                                                        ]
+                                                                    );
+                                                            }
+                                                            return position;
+                                                        })()}px`,
+                                                        height: `${getTaskHeight(
+                                                            task.level,
+                                                            task
+                                                        )}px`,
+                                                        ...(task.type ===
+                                                            "phase" &&
+                                                        !task.isExpanded
+                                                            ? {
+                                                                  backgroundColor: `${task.color}20`, // 20% opacity
+                                                                  borderLeft: `3px solid ${task.color}`,
+                                                              }
+                                                            : {}),
                                                     }}
                                                 >
-                                                    {hasChildren(task.id) && (
-                                                        <Button
-                                                            variant="ghost"
-                                                            size="sm"
-                                                            onClick={() =>
-                                                                onToggleExpand(
-                                                                    task.id
-                                                                )
-                                                            }
-                                                            className="h-6 w-6 p-0"
-                                                        >
-                                                            {task.isExpanded ? (
-                                                                <ChevronDown className="h-4 w-4" />
-                                                            ) : (
-                                                                <ChevronRight className="h-4 w-4" />
-                                                            )}
-                                                        </Button>
-                                                    )}
-                                                    <span
-                                                        className={`task-name ${task.type}-name`}
+                                                    <div
+                                                        className="task-label-content"
+                                                        style={{
+                                                            paddingLeft: `${
+                                                                task.level === 0
+                                                                    ? 15
+                                                                    : 15
+                                                            }px`,
+                                                        }}
                                                     >
-                                                        {task.name}
-                                                    </span>
-                                                </div>
-                                            </motion.div>
-                                        ))}
-                                </AnimatePresence>
+                                                        {hasChildren(
+                                                            task.id
+                                                        ) && (
+                                                            <Button
+                                                                variant="ghost"
+                                                                size="sm"
+                                                                onClick={() =>
+                                                                    onToggleExpand(
+                                                                        task.id
+                                                                    )
+                                                                }
+                                                                className="h-6 w-6 p-0"
+                                                            >
+                                                                {task.isExpanded ? (
+                                                                    <ChevronDown className="h-4 w-4" />
+                                                                ) : (
+                                                                    <ChevronRight className="h-4 w-4" />
+                                                                )}
+                                                            </Button>
+                                                        )}
+                                                        <span
+                                                            className={`task-name ${task.type}-name`}
+                                                        >
+                                                            {task.name}
+                                                        </span>
+                                                    </div>
+                                                </motion.div>
+                                            ))}
+                                    </AnimatePresence>
+                                </div>
                             </div>
                         </div>
 
@@ -556,12 +555,12 @@ export const GanttChart: FC<GanttChartProps> = ({
                                 {timelineMarkers.map((marker, index) => (
                                     <div
                                         key={index}
-                                        className="absolute top-0 h-full flex flex-col justify-center z-0"
+                                        className="absolute top-0 h-full flex flex-col justify-center z-50"
                                         style={{ left: `${marker.position}%` }}
                                     >
                                         <div className="w-px h-full bg-gray-600" />
                                         <div
-                                            className={`absolute top-2 left-1 ${responsiveTextClass} font-medium text-muted-foreground whitespace-nowrap z-10`}
+                                            className={`absolute top-2 left-1 ${responsiveTextClass} font-medium text-muted-foreground whitespace-nowrap z-50`}
                                         >
                                             {marker.label}
                                         </div>
@@ -569,16 +568,8 @@ export const GanttChart: FC<GanttChartProps> = ({
                                 ))}
                             </div>
 
-                            <div
-                                className="gantt-scroll-wrapper"
-                                ref={scrollContainerRef}
-                            >
-                                <motion.div
-                                    layout
-                                    transition={{
-                                        duration: 0.25,
-                                        ease: [0.4, 0.0, 0.2, 1],
-                                    }}
+                            <div className="gantt-scroll-wrapper">
+                                <div
                                     className="tasks-timeline-container"
                                     ref={tasksContainerRef}
                                     style={{
@@ -595,6 +586,17 @@ export const GanttChart: FC<GanttChartProps> = ({
                                         }px`,
                                     }}
                                 >
+                                    {/* Grid lines - inside stacking context */}
+                                    <div className="grid-lines absolute inset-0 pointer-events-none z-[5]">
+                                        {timelineMarkers.map((marker, index) => (
+                                            <div
+                                                key={index}
+                                                className="absolute top-0 h-full w-px bg-gray-600"
+                                                style={{ left: `${marker.position}%` }}
+                                            />
+                                        ))}
+                                    </div>
+                                    
                                     {visibleBars.length === 0 ? (
                                         <div className="flex items-center justify-center h-32">
                                             <p className="text-muted-foreground text-center">
@@ -604,7 +606,7 @@ export const GanttChart: FC<GanttChartProps> = ({
                                             </p>
                                         </div>
                                     ) : (
-                                        <AnimatePresence mode="popLayout">
+                                        <AnimatePresence>
                                             {visibleBars
                                                 .map((task, barIndex) => {
                                                     if (
@@ -626,35 +628,16 @@ export const GanttChart: FC<GanttChartProps> = ({
                                                     return (
                                                         <motion.div
                                                             key={task.id}
-                                                            layout="position"
                                                             initial={{
                                                                 opacity: 0,
-                                                                y: -10,
                                                                 scale: 0.9,
                                                             }}
                                                             animate={{
                                                                 opacity: 1,
-                                                                y: 0,
                                                                 scale: 1,
-                                                            }}
-                                                            exit={{
-                                                                opacity: 0,
-                                                                y: -10,
-                                                                scale: 0.9,
-                                                            }}
-                                                            transition={{
-                                                                duration: 0.2,
-                                                                ease: [
-                                                                    0.4, 0.0,
-                                                                    0.2, 1,
-                                                                ],
-                                                                layout: {
-                                                                    duration: 0.25,
-                                                                    ease: [
-                                                                        0.4,
-                                                                        0.0,
-                                                                        0.2, 1,
-                                                                    ],
+                                                                transition: {
+                                                                    delay: 0.15,
+                                                                    duration: 0.2,
                                                                 },
                                                             }}
                                                             className={`task-bar-row level-${task.level} ${task.type}-bar-row`}
@@ -761,18 +744,9 @@ export const GanttChart: FC<GanttChartProps> = ({
                                                 .filter(Boolean)}
                                         </AnimatePresence>
                                     )}
-                                </motion.div>
+                                </div>
                             </div>
 
-                            <div className="grid-lines absolute inset-0 pointer-events-none z-0">
-                                {timelineMarkers.map((marker, index) => (
-                                    <div
-                                        key={index}
-                                        className="absolute top-0 h-full w-px bg-gray-600"
-                                        style={{ left: `${marker.position}%` }}
-                                    />
-                                ))}
-                            </div>
                         </div>
                     </div>
                 </CardContent>

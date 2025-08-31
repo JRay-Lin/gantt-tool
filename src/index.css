@@ -166,7 +166,9 @@
 @layer components {
     .gantt-container {
         @apply grid grid-cols-[300px_1fr] h-fit max-h-none relative;
-        overflow: hidden;
+        overflow-y: auto;
+        scrollbar-width: thin;
+        max-height: calc(100vh - 200px);
     }
 
     .labels-column {
@@ -178,9 +180,9 @@
     }
 
     .labels-content {
-        @apply relative overflow-y-auto max-h-full;
-        scrollbar-width: thin;
+        @apply relative overflow-hidden max-h-full;
         height: calc(100% - 64px); /* Subtract header height */
+        will-change: scroll-position;
     }
 
     .task-label-row {
@@ -220,17 +222,18 @@
     }
 
     .timeline-header {
-        @apply relative h-16 border-b border-border bg-muted/10 z-0;
+        @apply relative h-16 border-b border-border bg-muted/10 z-40;
     }
 
     .gantt-scroll-wrapper {
-        @apply overflow-auto max-h-full;
-        scrollbar-width: thin;
+        @apply overflow-hidden max-h-full;
         height: calc(100% - 64px); /* Subtract header height */
+        will-change: scroll-position;
     }
 
     .tasks-timeline-container {
         @apply relative w-full min-h-full;
+        will-change: transform;
     }
 
     .task-bar-row {
@@ -238,7 +241,7 @@
     }
 
     .task-bar {
-        @apply absolute flex items-center justify-center text-white text-xs font-medium shadow-sm hover:shadow-md transition-all duration-200 cursor-default overflow-hidden;
+        @apply absolute flex items-center justify-center text-white text-xs font-medium shadow-sm hover:shadow-md transition-all duration-200 cursor-default overflow-hidden z-10;
     }
 
     .task-bar.phase-bar {
@@ -267,7 +270,7 @@
     }
 
     .grid-lines {
-        @apply pointer-events-none z-0;
+        @apply pointer-events-none z-[5];
     }
 
     /* Level-specific styling */

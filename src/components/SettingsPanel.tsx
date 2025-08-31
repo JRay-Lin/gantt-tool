@@ -90,31 +90,30 @@ export const SettingsPanel: FC<SettingsPanelProps> = ({
                                     />
                                 </CardTitle>
                                 <CardAction className="flex items-center">
-                                    <Button
-                                        variant="ghost"
-                                        size="icon"
-                                        className="w-8 h-8 p-0"
-                                        onClick={() => {
-                                            const colorInput =
-                                                document.createElement("input");
-                                            colorInput.type = "color";
-                                            colorInput.value = phase.color;
-                                            colorInput.onchange = (e) =>
+                                    <div className="relative">
+                                        <input
+                                            type="color"
+                                            value={phase.color}
+                                            onChange={(e) =>
                                                 onUpdateTask(phase.id, {
-                                                    color: (
-                                                        e.target as HTMLInputElement
-                                                    ).value,
-                                                });
-                                            colorInput.click();
-                                        }}
-                                    >
+                                                    color: e.target.value,
+                                                })
+                                            }
+                                            className="absolute inset-0 w-8 h-8 opacity-0 cursor-pointer"
+                                        />
+                                        <Button
+                                            variant="ghost"
+                                            size="icon"
+                                            className="w-8 h-8 p-0 pointer-events-none"
+                                        >
                                         <div
                                             className="w-4 h-4 rounded-full border"
                                             style={{
                                                 backgroundColor: phase.color,
                                             }}
                                         />
-                                    </Button>
+                                        </Button>
+                                    </div>
                                     <Button
                                         variant="ghost"
                                         size="icon"
@@ -147,33 +146,22 @@ export const SettingsPanel: FC<SettingsPanelProps> = ({
                                                     placeholder="Task name"
                                                 />
                                                 <div className="task-actions-small flex items-center gap-1">
-                                                    <Button
-                                                        variant="ghost"
-                                                        size="icon"
-                                                        className="w-7 h-7 p-0"
-                                                        onClick={() => {
-                                                            const colorInput =
-                                                                document.createElement(
-                                                                    "input"
-                                                                );
-                                                            colorInput.type =
-                                                                "color";
-                                                            colorInput.value =
-                                                                task.color;
-                                                            colorInput.onchange =
-                                                                (e) =>
-                                                                    onUpdateTask(
-                                                                        task.id,
-                                                                        {
-                                                                            color: (
-                                                                                e.target as HTMLInputElement
-                                                                            )
-                                                                                .value,
-                                                                        }
-                                                                    );
-                                                            colorInput.click();
-                                                        }}
-                                                    >
+                                                    <div className="relative">
+                                                        <input
+                                                            type="color"
+                                                            value={task.color}
+                                                            onChange={(e) =>
+                                                                onUpdateTask(task.id, {
+                                                                    color: e.target.value,
+                                                                })
+                                                            }
+                                                            className="absolute inset-0 w-7 h-7 opacity-0 cursor-pointer"
+                                                        />
+                                                        <Button
+                                                            variant="ghost"
+                                                            size="icon"
+                                                            className="w-7 h-7 p-0 pointer-events-none"
+                                                        >
                                                         <div
                                                             className="w-3 h-3 rounded-full border"
                                                             style={{
@@ -181,7 +169,8 @@ export const SettingsPanel: FC<SettingsPanelProps> = ({
                                                                     task.color,
                                                             }}
                                                         />
-                                                    </Button>
+                                                        </Button>
+                                                    </div>
                                                     <Button
                                                         variant="ghost"
                                                         size="icon"
@@ -293,33 +282,22 @@ export const SettingsPanel: FC<SettingsPanelProps> = ({
                                                     placeholder="Task name"
                                                 />
                                                 <div className="task-actions-small flex items-center gap-1">
-                                                    <Button
-                                                        variant="ghost"
-                                                        size="icon"
-                                                        className="w-7 h-7 p-0"
-                                                        onClick={() => {
-                                                            const colorInput =
-                                                                document.createElement(
-                                                                    "input"
-                                                                );
-                                                            colorInput.type =
-                                                                "color";
-                                                            colorInput.value =
-                                                                task.color;
-                                                            colorInput.onchange =
-                                                                (e) =>
-                                                                    onUpdateTask(
-                                                                        task.id,
-                                                                        {
-                                                                            color: (
-                                                                                e.target as HTMLInputElement
-                                                                            )
-                                                                                .value,
-                                                                        }
-                                                                    );
-                                                            colorInput.click();
-                                                        }}
-                                                    >
+                                                    <div className="relative">
+                                                        <input
+                                                            type="color"
+                                                            value={task.color}
+                                                            onChange={(e) =>
+                                                                onUpdateTask(task.id, {
+                                                                    color: e.target.value,
+                                                                })
+                                                            }
+                                                            className="absolute inset-0 w-7 h-7 opacity-0 cursor-pointer"
+                                                        />
+                                                        <Button
+                                                            variant="ghost"
+                                                            size="icon"
+                                                            className="w-7 h-7 p-0 pointer-events-none"
+                                                        >
                                                         <div
                                                             className="w-3 h-3 rounded-full border"
                                                             style={{
@@ -327,7 +305,8 @@ export const SettingsPanel: FC<SettingsPanelProps> = ({
                                                                     task.color,
                                                             }}
                                                         />
-                                                    </Button>
+                                                        </Button>
+                                                    </div>
                                                     <Button
                                                         variant="ghost"
                                                         size="icon"

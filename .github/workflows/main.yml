@@ -36,6 +36,10 @@ jobs:
       - name: Build
         run: pnpm run build
 
+      - name: Fix asset paths for GitHub Pages
+        run: |
+          sed -i 's|\./assets/|assets/|g' ./dist/index.html
+
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
