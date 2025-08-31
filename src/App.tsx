@@ -6,7 +6,9 @@ import {
     calculateProjectTimeline,
     getAllTasksWithCalculatedDates,
 } from "./utils/phaseCalculations";
-import "./App.css";
+import { getTaskColorFromParent } from "./utils/colorUtils";
+import { ThemeProvider } from "@/components/theme-provider";
+
 function App() {
     const [tasks, setTasks] = useState<Task[]>([
         {
@@ -103,19 +105,64 @@ function App() {
         parentId?: string,
         taskType: "phase" | "task" = "task"
     ) => {
-        const parentLevel = parentId
-            ? tasks.find((t) => t.id === parentId)?.level ?? -1
-            : -1;
+        const parentTask = parentId
+            ? tasks.find((t) => t.id === parentId)
+            : undefined;
+        const parentLevel = parentTask?.level ?? -1;
+
+        // Find the latest end date among relevant tasks
+        const getSmartStartDate = () => {
+            let relevantTasks = tasks.filter((task) => task.endDate);
+            
+            // If adding task to a phase, only consider tasks within that phase
+            if (parentTask && parentTask.type === "phase") {
+                const phaseChildren = relevantTasks.filter((task) => task.parentId === parentId);
+                if (phaseChildren.length > 0) {
+                    relevantTasks = phaseChildren;
+                }
+            }
+            
+            if (relevantTasks.length === 0) {
+                return new Date(); // Default to today if no relevant tasks exist
+            }
+
+            const latestEndDate = new Date(
+                Math.max(...relevantTasks.map((task) => task.endDate!.getTime()))
+            );
+
+            // Set start date to the same as the latest end date
+            const smartStartDate = new Date(latestEndDate);
+
+            return smartStartDate;
+        };
+
+        const smartStartDate =
+            taskType === "task" ? getSmartStartDate() : undefined;
+        const smartEndDate =
+            taskType === "task" && smartStartDate
+                ? new Date(smartStartDate.getTime() + 7 * 24 * 60 * 60 * 1000)
+                : undefined;
+
+        // Determine color based on parent phase
+        const getTaskColor = () => {
+            if (taskType === "phase") {
+                return "#9b59b6"; // Default phase color
+            }
+            
+            if (parentTask && parentTask.type === "phase") {
+                return getTaskColorFromParent(parentTask.color);
+            }
+            
+            return "#d1c4e9"; // Default task color fallback
+        };
+
         const newTask: Task = {
             id: Date.now().toString(),
             name: taskType === "phase" ? "New Phase" : "New Task",
             type: taskType,
-            startDate: taskType === "task" ? new Date() : undefined,
-            endDate:
-                taskType === "task"
-                    ? new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
-                    : undefined,
-            color: taskType === "phase" ? "#9b59b6" : "#d1c4e9",
+            startDate: smartStartDate,
+            endDate: smartEndDate,
+            color: getTaskColor(),
             parentId,
             level: parentLevel + 1,
             isExpanded: true,
@@ -175,29 +222,31 @@ function App() {
     };
 
     return (
-        <div className="app">
-            <div className="app-container">
-                <div className="settings-column">
-                    <SettingsPanel
-                        tasks={tasks}
-                        settings={settings}
-                        onAddTask={handleAddTask}
-                        onAddPhase={handleAddPhase}
-                        onUpdateTask={handleUpdateTask}
-                        onDeleteTask={handleDeleteTask}
-                        onUpdateSettings={handleUpdateSettings}
-                    />
-                </div>
-                <div className="chart-column">
-                    <GanttChart
-                        tasks={tasksWithCalculatedDates}
-                        settings={settingsWithTimeline}
-                        onToggleExpand={handleToggleExpand}
-                        onUpdateSettings={handleUpdateSettings}
-                    />
+        <ThemeProvider>
+            <div className="min-h-screen bg-background">
+                <div className="grid grid-cols-1 lg:grid-cols-[400px_1fr] h-screen">
+                    <div className="settings-column border-r border-border bg-muted/10 overflow-hidden">
+                        <SettingsPanel
+                            tasks={tasks}
+                            settings={settings}
+                            onAddTask={handleAddTask}
+                            onAddPhase={handleAddPhase}
+                            onUpdateTask={handleUpdateTask}
+                            onDeleteTask={handleDeleteTask}
+                            onUpdateSettings={handleUpdateSettings}
+                        />
+                    </div>
+                    <div className="chart-column overflow-hidden p-6">
+                        <GanttChart
+                            tasks={tasksWithCalculatedDates}
+                            settings={settingsWithTimeline}
+                            onToggleExpand={handleToggleExpand}
+                            onUpdateSettings={handleUpdateSettings}
+                        />
+                    </div>
                 </div>
             </div>
-        </div>
+        </ThemeProvider>
     );
 }
 

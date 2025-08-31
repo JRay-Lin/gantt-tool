@@ -1,5 +1,19 @@
 import type { FC } from "react";
 import type { Task, ProjectSettings } from "../types";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+    Card,
+    CardHeader,
+    CardContent,
+    CardFooter,
+    CardTitle,
+    CardAction,
+} from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Trash2, Plus } from "lucide-react";
+import { DatePicker } from "@/components/ui/date-picker";
 
 interface SettingsPanelProps {
     tasks: Task[];
@@ -18,14 +32,6 @@ export const SettingsPanel: FC<SettingsPanelProps> = ({
     onUpdateTask,
     onDeleteTask,
 }) => {
-    const formatDateForInput = (date: Date) => {
-        return date.toISOString().split("T")[0];
-    };
-
-    const parseDate = (dateStr: string) => {
-        return new Date(dateStr);
-    };
-
     const getPhases = () => {
         return tasks.filter((t) => t.type === "phase" && !t.parentId);
     };
@@ -39,46 +45,55 @@ export const SettingsPanel: FC<SettingsPanelProps> = ({
     };
 
     return (
-        <div className="settings-panel">
-            <div className="settings-section">
-                <div className="section-header">
-                    <h2>Phases & Tasks</h2>
-                    <div className="add-buttons">
-                        <button
+        <div className="h-full flex flex-col p-6 bg-background">
+            <div className="flex-shrink-0 mb-6">
+                <div className="flex items-center justify-between">
+                    <h3 className="text-xl font-bold">Phases & Tasks</h3>
+                    <div className="add-buttons flex gap-2">
+                        <Button
                             onClick={onAddPhase}
-                            className="add-button phase-button"
+                            variant="default"
+                            className="gap-2"
                         >
-                            + Add Phase
-                        </button>
-                        <button
+                            <Plus className="w-4 h-4" />
+                            Add Phase
+                        </Button>
+                        <Button
                             onClick={() => onAddTask()}
-                            className="add-button task-button"
+                            variant="outline"
+                            className="gap-2"
                         >
-                            + Add Task
-                        </button>
+                            <Plus className="w-4 h-4" />
+                            Add Task
+                        </Button>
                     </div>
                 </div>
+            </div>
 
-                <div className="cards-container">
+            <ScrollArea className="flex-1 h-[200px] rounded-md">
+                <div className="space-y-4">
                     {/* Phase Cards */}
                     {getPhases().map((phase) => (
-                        <div key={phase.id} className="phase-card">
-                            <div className="phase-header">
-                                <input
-                                    type="text"
-                                    value={phase.name}
-                                    onChange={(e) =>
-                                        onUpdateTask(phase.id, {
-                                            name: e.target.value,
-                                        })
-                                    }
-                                    className="phase-name-input"
-                                    placeholder="Phase name"
-                                />
-                                <div className="phase-actions">
-                                    <div
-                                        className="color-circle"
-                                        style={{ backgroundColor: phase.color }}
+                        <Card key={phase.id} className="phase-card">
+                            <CardHeader className="pb-0">
+                                <CardTitle className="flex items-center gap-2">
+                                    <Input
+                                        type="text"
+                                        value={phase.name}
+                                        onChange={(e) =>
+                                            onUpdateTask(phase.id, {
+                                                name: e.target.value,
+                                            })
+                                        }
+                                        className="font-semibold text-lg border-none p-2 h-auto focus-visible:ring-0"
+                                        placeholder="Phase name"
+                                    />
+                                </CardTitle>
+                                <CardAction className="flex items-center">
+                                    <Button
+                                        variant="ghost"
+                                        size="icon"
+                                        className="w-8 h-8 p-0"
                                         onClick={() => {
                                             const colorInput =
                                                 document.createElement("input");
@@ -92,25 +107,34 @@ export const SettingsPanel: FC<SettingsPanelProps> = ({
                                                 });
                                             colorInput.click();
                                         }}
-                                    />
-                                    <button
-                                        onClick={() => onDeleteTask(phase.id)}
-                                        className="delete-button"
                                     >
-                                        ×
-                                    </button>
-                                </div>
-                            </div>
+                                        <div
+                                            className="w-4 h-4 rounded-full border"
+                                            style={{
+                                                backgroundColor: phase.color,
+                                            }}
+                                        />
+                                    </Button>
+                                    <Button
+                                        variant="ghost"
+                                        size="icon"
+                                        className="w-8 h-8 p-0 text-destructive hover:text-destructive hover:bg-destructive/10"
+                                        onClick={() => onDeleteTask(phase.id)}
+                                    >
+                                        <Trash2 className="w-4 h-4" />
+                                    </Button>
+                                </CardAction>
+                            </CardHeader>
 
-                            <div className="tasks-container">
+                            <CardContent className="space-y-3 pt-0">
                                 {getTasksForPhase(phase.id).map((task) => (
                                     <div
                                         key={task.id}
-                                        className="task-component"
+                                        className="task-component p-3 border rounded-lg bg-muted/30"
                                     >
-                                        <div className="task-row">
-                                            <div className="task-name-row">
-                                                <input
+                                        <div className="task-row space-y-3">
+                                            <div className="task-name-row flex items-center gap-2">
+                                                <Input
                                                     type="text"
                                                     value={task.name}
                                                     onChange={(e) =>
@@ -119,16 +143,14 @@ export const SettingsPanel: FC<SettingsPanelProps> = ({
                                                                 .value,
                                                         })
                                                     }
-                                                    className="task-name-input-small"
+                                                    className="flex-1"
                                                     placeholder="Task name"
                                                 />
-                                                <div className="task-actions-small">
-                                                    <div
-                                                        className="color-circle color-circle-small"
-                                                        style={{
-                                                            backgroundColor:
-                                                                task.color,
-                                                        }}
+                                                <div className="task-actions-small flex items-center gap-1">
+                                                    <Button
+                                                        variant="ghost"
+                                                        size="icon"
+                                                        className="w-7 h-7 p-0"
                                                         onClick={() => {
                                                             const colorInput =
                                                                 document.createElement(
@@ -151,206 +173,245 @@ export const SettingsPanel: FC<SettingsPanelProps> = ({
                                                                     );
                                                             colorInput.click();
                                                         }}
-                                                    />
-                                                    <button
+                                                    >
+                                                        <div
+                                                            className="w-3 h-3 rounded-full border"
+                                                            style={{
+                                                                backgroundColor:
+                                                                    task.color,
+                                                            }}
+                                                        />
+                                                    </Button>
+                                                    <Button
+                                                        variant="ghost"
+                                                        size="icon"
+                                                        className="w-7 h-7 p-0 text-destructive hover:text-destructive hover:bg-destructive/10"
                                                         onClick={() =>
                                                             onDeleteTask(
                                                                 task.id
                                                             )
                                                         }
-                                                        className="delete-button delete-button-small"
                                                     >
-                                                        ×
-                                                    </button>
+                                                        <Trash2 className="w-3 h-3" />
+                                                    </Button>
                                                 </div>
                                             </div>
                                             <div className="task-details-row">
-                                                <div className="task-dates-inline">
-                                                    <input
-                                                        type="date"
-                                                        value={
-                                                            task.startDate
-                                                                ? formatDateForInput(
-                                                                      task.startDate
-                                                                  )
-                                                                : ""
-                                                        }
-                                                        onChange={(e) =>
-                                                            onUpdateTask(
-                                                                task.id,
-                                                                {
-                                                                    startDate:
-                                                                        parseDate(
-                                                                            e
-                                                                                .target
-                                                                                .value
-                                                                        ),
-                                                                }
-                                                            )
-                                                        }
-                                                        className="date-input-small"
-                                                        placeholder="Start date"
-                                                    />
-                                                    <input
-                                                        type="date"
-                                                        value={
-                                                            task.endDate
-                                                                ? formatDateForInput(
-                                                                      task.endDate
-                                                                  )
-                                                                : ""
-                                                        }
-                                                        onChange={(e) =>
-                                                            onUpdateTask(
-                                                                task.id,
-                                                                {
-                                                                    endDate:
-                                                                        parseDate(
-                                                                            e
-                                                                                .target
-                                                                                .value
-                                                                        ),
-                                                                }
-                                                            )
-                                                        }
-                                                        className="date-input-small"
-                                                        placeholder="End date"
-                                                    />
+                                                <div className="task-dates-inline flex gap-2">
+                                                    <div className="flex-1">
+                                                        <Label className="text-xs text-muted-foreground">
+                                                            Start
+                                                        </Label>
+                                                        <DatePicker
+                                                            value={
+                                                                task.startDate
+                                                            }
+                                                            onChange={(
+                                                                date:
+                                                                    | Date
+                                                                    | undefined
+                                                            ) =>
+                                                                onUpdateTask(
+                                                                    task.id,
+                                                                    {
+                                                                        startDate:
+                                                                            date,
+                                                                    }
+                                                                )
+                                                            }
+                                                            placeholder="Start date"
+                                                        />
+                                                    </div>
+                                                    <div className="flex-1">
+                                                        <Label className="text-xs text-muted-foreground">
+                                                            End
+                                                        </Label>
+                                                        <DatePicker
+                                                            value={task.endDate}
+                                                            onChange={(
+                                                                date:
+                                                                    | Date
+                                                                    | undefined
+                                                            ) =>
+                                                                onUpdateTask(
+                                                                    task.id,
+                                                                    {
+                                                                        endDate:
+                                                                            date,
+                                                                    }
+                                                                )
+                                                            }
+                                                            placeholder="End date"
+                                                            minDate={task.startDate}
+                                                        />
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 ))}
-                            </div>
+                            </CardContent>
 
-                            <div className="phase-footer">
-                                <button
+                            <CardFooter className="pt-3">
+                                <Button
                                     onClick={() => onAddTask(phase.id, "task")}
-                                    className="add-task-footer-button"
+                                    variant="outline"
+                                    size="sm"
+                                    className="w-full gap-2"
                                 >
-                                    + Add Task
-                                </button>
-                            </div>
-                        </div>
+                                    <Plus className="w-4 h-4" />
+                                    Add Task
+                                </Button>
+                            </CardFooter>
+                        </Card>
                     ))}
 
                     {/* Root Tasks (tasks without phases) */}
                     {getRootTasks().length > 0 && (
-                        <div className="root-tasks-section">
-                            <h3>Individual Tasks</h3>
-                            {getRootTasks().map((task) => (
-                                <div key={task.id} className="root-task-card">
-                                    <div className="task-row">
-                                        <div className="task-name-row">
-                                            <input
-                                                type="text"
-                                                value={task.name}
-                                                onChange={(e) =>
-                                                    onUpdateTask(task.id, {
-                                                        name: e.target.value,
-                                                    })
-                                                }
-                                                className="task-name-input-small"
-                                                placeholder="Task name"
-                                            />
-                                            <div className="task-actions-small">
-                                                <div
-                                                    className="color-circle color-circle-small"
-                                                    style={{
-                                                        backgroundColor:
-                                                            task.color,
-                                                    }}
-                                                    onClick={() => {
-                                                        const colorInput =
-                                                            document.createElement(
-                                                                "input"
-                                                            );
-                                                        colorInput.type =
-                                                            "color";
-                                                        colorInput.value =
-                                                            task.color;
-                                                        colorInput.onchange = (
-                                                            e
-                                                        ) =>
-                                                            onUpdateTask(
-                                                                task.id,
-                                                                {
-                                                                    color: (
-                                                                        e.target as HTMLInputElement
-                                                                    ).value,
-                                                                }
-                                                            );
-                                                        colorInput.click();
-                                                    }}
-                                                />
-                                                <button
-                                                    onClick={() =>
-                                                        onDeleteTask(task.id)
+                        <Card className="root-tasks-section">
+                            <CardHeader>
+                                <CardTitle>Individual Tasks</CardTitle>
+                            </CardHeader>
+                            <CardContent className="space-y-3">
+                                {getRootTasks().map((task) => (
+                                    <div
+                                        key={task.id}
+                                        className="root-task-card p-3 border rounded-lg bg-muted/30"
+                                    >
+                                        <div className="task-row space-y-3">
+                                            <div className="task-name-row flex items-center gap-2">
+                                                <Input
+                                                    type="text"
+                                                    value={task.name}
+                                                    onChange={(e) =>
+                                                        onUpdateTask(task.id, {
+                                                            name: e.target
+                                                                .value,
+                                                        })
                                                     }
-                                                    className="delete-button delete-button-small"
-                                                >
-                                                    ×
-                                                </button>
+                                                    className="flex-1"
+                                                    placeholder="Task name"
+                                                />
+                                                <div className="task-actions-small flex items-center gap-1">
+                                                    <Button
+                                                        variant="ghost"
+                                                        size="icon"
+                                                        className="w-7 h-7 p-0"
+                                                        onClick={() => {
+                                                            const colorInput =
+                                                                document.createElement(
+                                                                    "input"
+                                                                );
+                                                            colorInput.type =
+                                                                "color";
+                                                            colorInput.value =
+                                                                task.color;
+                                                            colorInput.onchange =
+                                                                (e) =>
+                                                                    onUpdateTask(
+                                                                        task.id,
+                                                                        {
+                                                                            color: (
+                                                                                e.target as HTMLInputElement
+                                                                            )
+                                                                                .value,
+                                                                        }
+                                                                    );
+                                                            colorInput.click();
+                                                        }}
+                                                    >
+                                                        <div
+                                                            className="w-3 h-3 rounded-full border"
+                                                            style={{
+                                                                backgroundColor:
+                                                                    task.color,
+                                                            }}
+                                                        />
+                                                    </Button>
+                                                    <Button
+                                                        variant="ghost"
+                                                        size="icon"
+                                                        className="w-7 h-7 p-0 text-destructive hover:text-destructive hover:bg-destructive/10"
+                                                        onClick={() =>
+                                                            onDeleteTask(
+                                                                task.id
+                                                            )
+                                                        }
+                                                    >
+                                                        <Trash2 className="w-3 h-3" />
+                                                    </Button>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div className="task-details-row">
-                                            <div className="task-dates-inline">
-                                                <input
-                                                    type="date"
-                                                    value={
-                                                        task.startDate
-                                                            ? formatDateForInput(
-                                                                  task.startDate
-                                                              )
-                                                            : ""
-                                                    }
-                                                    onChange={(e) =>
-                                                        onUpdateTask(task.id, {
-                                                            startDate:
-                                                                parseDate(
-                                                                    e.target
-                                                                        .value
-                                                                ),
-                                                        })
-                                                    }
-                                                    className="date-input-small"
-                                                    placeholder="Start date"
-                                                />
-                                                <input
-                                                    type="date"
-                                                    value={
-                                                        task.endDate
-                                                            ? formatDateForInput(
-                                                                  task.endDate
-                                                              )
-                                                            : ""
-                                                    }
-                                                    onChange={(e) =>
-                                                        onUpdateTask(task.id, {
-                                                            endDate: parseDate(
-                                                                e.target.value
-                                                            ),
-                                                        })
-                                                    }
-                                                    className="date-input-small"
-                                                    placeholder="End date"
-                                                />
+                                            <div className="task-details-row">
+                                                <div className="task-dates-inline flex gap-2">
+                                                    <div className="flex-1">
+                                                        <Label className="text-xs text-muted-foreground">
+                                                            Start
+                                                        </Label>
+                                                        <DatePicker
+                                                            value={
+                                                                task.startDate
+                                                            }
+                                                            onChange={(
+                                                                date:
+                                                                    | Date
+                                                                    | undefined
+                                                            ) =>
+                                                                onUpdateTask(
+                                                                    task.id,
+                                                                    {
+                                                                        startDate:
+                                                                            date,
+                                                                    }
+                                                                )
+                                                            }
+                                                            placeholder="Start date"
+                                                        />
+                                                    </div>
+                                                    <div className="flex-1">
+                                                        <Label className="text-xs text-muted-foreground">
+                                                            End
+                                                        </Label>
+                                                        <DatePicker
+                                                            value={task.endDate}
+                                                            onChange={(
+                                                                date:
+                                                                    | Date
+                                                                    | undefined
+                                                            ) =>
+                                                                onUpdateTask(
+                                                                    task.id,
+                                                                    {
+                                                                        endDate:
+                                                                            date,
+                                                                    }
+                                                                )
+                                                            }
+                                                            placeholder="End date"
+                                                            minDate={task.startDate}
+                                                        />
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                            ))}
-                        </div>
+                                ))}
+                            </CardContent>
+                        </Card>
                     )}
 
                     {tasks.length === 0 && (
-                        <div className="empty-state">
-                            No tasks yet. Click "Add Phase" or "Add Task" to get
-                            started.
-                        </div>
+                        <Card className="empty-state">
+                            <CardContent className="text-center py-12">
+                                <p className="text-muted-foreground">
+                                    No tasks yet. Click "Add Phase" or "Add
+                                    Task" to get started.
+                                </p>
+                            </CardContent>
+                        </Card>
                     )}
                 </div>
-            </div>
+            </ScrollArea>
         </div>
     );
 };

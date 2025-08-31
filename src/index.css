@@ -1,0 +1,346 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+    --background: #f8f8f8;
+    --foreground: #1f1f1f;
+    --card: #fcfcfc;
+    --card-foreground: #1f1f1f;
+    --popover: #fcfcfc;
+    --popover-foreground: #1f1f1f;
+    --primary: #63493f;
+    --primary-foreground: #ffffff;
+    --secondary: #ffdfb1;
+    --secondary-foreground: #592d1c;
+    --muted: #eeeeee;
+    --muted-foreground: #636363;
+    --accent: #e8e8e8;
+    --accent-foreground: #1f1f1f;
+    --destructive: #e55032;
+    --border: #d7d7d7;
+    --input: #d7d7d7;
+    --ring: #63493f;
+    --chart-1: #63493f;
+    --chart-2: #ffdfb1;
+    --chart-3: #e8e8e8;
+    --chart-4: #ffe7c7;
+    --chart-5: #63493f;
+    --sidebar: #fcfcfc;
+    --sidebar-foreground: #242424;
+    --sidebar-primary: #353535;
+    --sidebar-primary-foreground: #fcfcfc;
+    --sidebar-accent: #f8f8f8;
+    --sidebar-accent-foreground: #353535;
+    --sidebar-border: #ebebeb;
+    --sidebar-ring: #b4b4b4;
+
+    --font-sans: "Geist", "Geist Fallback", ui-sans-serif, system-ui,
+        -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue",
+        Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+        "Segoe UI Symbol", "Noto Color Emoji";
+    --font-serif: "Geist", "Geist Fallback", ui-serif, Georgia, Cambria,
+        "Times New Roman", Times, serif;
+    --font-mono: "Geist Mono", "Geist Mono Fallback", ui-monospace,
+        SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+        "Courier New", monospace;
+
+    --radius: 0.5rem;
+
+    --shadow-2xs: 0 1px 3px 0px #000000;
+    --shadow-xs: 0 1px 3px 0px #000000;
+    --shadow-sm: 0 1px 3px 0px #000000, 0 1px 2px -1px #000000;
+    --shadow: 0 1px 3px 0px #000000, 0 1px 2px -1px #000000;
+    --shadow-md: 0 1px 3px 0px #000000, 0 2px 4px -1px #000000;
+    --shadow-lg: 0 1px 3px 0px #000000, 0 4px 6px -1px #000000;
+    --shadow-xl: 0 1px 3px 0px #000000, 0 8px 10px -1px #000000;
+    --shadow-2xl: 0 1px 3px 0px #000000;
+}
+
+.dark {
+    --background: #121212;
+    --foreground: #eeeeee;
+    --card: #181818;
+    --card-foreground: #eeeeee;
+    --popover: #181818;
+    --popover-foreground: #eeeeee;
+    --primary: #fcdfc2;
+    --primary-foreground: #0a191a;
+    --secondary: #3a3128;
+    --secondary-foreground: #fcdfc2;
+    --muted: #222222;
+    --muted-foreground: #b4b4b4;
+    --accent: #2b2b2b;
+    --accent-foreground: #eeeeee;
+    --destructive: #e55032;
+    --border: #211f1a;
+    --input: #484848;
+    --ring: #fcdfc2;
+    --chart-1: #fcdfc2;
+    --chart-2: #3a3128;
+    --chart-3: #2b2b2b;
+    --chart-4: #423930;
+    --chart-5: #fcdfc2;
+    --sidebar: #18181d;
+    --sidebar-foreground: #f5f5f5;
+    --sidebar-primary: #1d4eda;
+    --sidebar-primary-foreground: #ffffff;
+    --sidebar-accent: #26262b;
+    --sidebar-accent-foreground: #f5f5f5;
+    --sidebar-border: #26262b;
+    --sidebar-ring: #d3d3db;
+
+    --shadow-2xs: 0 1px 3px 0px #000000;
+    --shadow-xs: 0 1px 3px 0px #000000;
+    --shadow-sm: 0 1px 3px 0px #000000, 0 1px 2px -1px #000000;
+    --shadow: 0 1px 3px 0px #000000, 0 1px 2px -1px #000000;
+    --shadow-md: 0 1px 3px 0px #000000, 0 2px 4px -1px #000000;
+    --shadow-lg: 0 1px 3px 0px #000000, 0 4px 6px -1px #000000;
+    --shadow-xl: 0 1px 3px 0px #000000, 0 8px 10px -1px #000000;
+    --shadow-2xl: 0 1px 3px 0px #000000;
+}
+
+@theme inline {
+    --color-background: var(--background);
+    --color-foreground: var(--foreground);
+    --color-card: var(--card);
+    --color-card-foreground: var(--card-foreground);
+    --color-popover: var(--popover);
+    --color-popover-foreground: var(--popover-foreground);
+    --color-primary: var(--primary);
+    --color-primary-foreground: var(--primary-foreground);
+    --color-secondary: var(--secondary);
+    --color-secondary-foreground: var(--secondary-foreground);
+    --color-muted: var(--muted);
+    --color-muted-foreground: var(--muted-foreground);
+    --color-accent: var(--accent);
+    --color-accent-foreground: var(--accent-foreground);
+    --color-destructive: var(--destructive);
+    --color-border: var(--border);
+    --color-input: var(--input);
+    --color-ring: var(--ring);
+    --color-chart-1: var(--chart-1);
+    --color-chart-2: var(--chart-2);
+    --color-chart-3: var(--chart-3);
+    --color-chart-4: var(--chart-4);
+    --color-chart-5: var(--chart-5);
+    --color-sidebar: var(--sidebar);
+    --color-sidebar-foreground: var(--sidebar-foreground);
+    --color-sidebar-primary: var(--sidebar-primary);
+    --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+    --color-sidebar-accent: var(--sidebar-accent);
+    --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+    --color-sidebar-border: var(--sidebar-border);
+    --color-sidebar-ring: var(--sidebar-ring);
+
+    --font-sans: var(--font-sans);
+    --font-mono: var(--font-mono);
+    --font-serif: var(--font-serif);
+
+    --radius-sm: calc(var(--radius) - 4px);
+    --radius-md: calc(var(--radius) - 2px);
+    --radius-lg: var(--radius);
+    --radius-xl: calc(var(--radius) + 4px);
+
+    --shadow-2xs: var(--shadow-2xs);
+    --shadow-xs: var(--shadow-xs);
+    --shadow-sm: var(--shadow-sm);
+    --shadow: var(--shadow);
+    --shadow-md: var(--shadow-md);
+    --shadow-lg: var(--shadow-lg);
+    --shadow-xl: var(--shadow-xl);
+    --shadow-2xl: var(--shadow-2xl);
+}
+
+@layer base {
+    * {
+        @apply border-border outline-ring/50;
+    }
+    body {
+        @apply bg-background text-foreground;
+    }
+}
+
+/* Gantt Chart Layout Styles */
+@layer components {
+    .gantt-container {
+        @apply grid grid-cols-[300px_1fr] h-fit max-h-none relative;
+        overflow: hidden;
+    }
+
+    .labels-column {
+        @apply bg-muted/5 relative overflow-hidden h-full;
+    }
+
+    .labels-header {
+        @apply h-16 px-4 flex items-center border-b border-border bg-muted/10;
+    }
+
+    .labels-content {
+        @apply relative overflow-y-auto max-h-full;
+        scrollbar-width: thin;
+        height: calc(100% - 64px); /* Subtract header height */
+    }
+
+    .task-label-row {
+        @apply absolute left-0 right-0 flex items-center px-4 border-b border-border/50 transition-all duration-200 hover:bg-muted/20;
+    }
+
+    .task-label-row.level-0 {
+        @apply font-bold text-foreground text-base;
+    }
+
+    .phase-label-row {
+        @apply bg-muted/30 border-l-4;
+    }
+
+    .phase-label-row.expanded {
+        @apply bg-muted/20 border-l-2;
+    }
+
+    .task-label-row.level-1 {
+        @apply text-sm;
+    }
+
+    .task-label-content {
+        @apply flex items-center gap-2 w-full;
+    }
+
+    .task-name {
+        @apply truncate;
+    }
+
+    .phase-name {
+        @apply font-bold text-foreground text-base;
+    }
+
+    .timeline-container {
+        @apply relative bg-muted/10 overflow-hidden h-full;
+    }
+
+    .timeline-header {
+        @apply relative h-16 border-b border-border bg-muted/10 z-0;
+    }
+
+    .gantt-scroll-wrapper {
+        @apply overflow-auto max-h-full;
+        scrollbar-width: thin;
+        height: calc(100% - 64px); /* Subtract header height */
+    }
+
+    .tasks-timeline-container {
+        @apply relative w-full min-h-full;
+    }
+
+    .task-bar-row {
+        @apply absolute left-0 right-0 flex items-center transition-all duration-200;
+    }
+
+    .task-bar {
+        @apply absolute flex items-center justify-center text-white text-xs font-medium shadow-sm hover:shadow-md transition-all duration-200 cursor-default overflow-hidden;
+    }
+
+    .task-bar.phase-bar {
+        @apply font-bold text-white text-base;
+        min-height: 32px;
+    }
+
+    .task-dates {
+        @apply truncate px-2 py-1 text-center;
+    }
+
+    .phase-dates {
+        @apply font-medium;
+    }
+
+    .task-connector {
+        @apply border-dashed border-muted-foreground/30;
+    }
+
+    .phase-color-band {
+        @apply rounded-r-md transition-all duration-300 hover:shadow-lg z-30;
+    }
+
+    .clickable-band:hover {
+        @apply scale-105;
+    }
+
+    .grid-lines {
+        @apply pointer-events-none z-0;
+    }
+
+    /* Level-specific styling */
+    .level-0.task-bar {
+        @apply z-10;
+    }
+
+    .level-1.task-bar {
+        @apply z-20;
+    }
+
+    /* Animation and hover effects */
+    .task-bar:hover {
+        @apply scale-105 z-30;
+        filter: brightness(1.1);
+    }
+
+    .task-label-row:hover .task-name {
+        @apply text-primary;
+    }
+
+    /* Date picker styles */
+    .date-picker-container {
+        @apply relative;
+    }
+
+    .date-input-small {
+        @apply text-sm;
+    }
+
+    /* Settings panel styles */
+    .phase-card {
+        @apply transition-all duration-200 hover:shadow-md;
+    }
+
+    .task-component {
+        @apply transition-all duration-200 hover:bg-muted/40;
+    }
+
+    .root-task-card {
+        @apply transition-all duration-200 hover:bg-muted/40;
+    }
+
+    .add-buttons {
+        @apply gap-2;
+    }
+
+    .task-actions-small {
+        @apply gap-1;
+    }
+
+    .task-dates-inline {
+        @apply gap-2;
+    }
+
+    .empty-state {
+        @apply border-dashed border-2;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .gantt-container {
+            @apply grid-cols-[250px_1fr];
+        }
+    }
+
+    @media (max-width: 640px) {
+        .gantt-container {
+            @apply grid-cols-1 grid-rows-[300px_1fr];
+        }
+
+        .labels-column {
+            @apply border-r-0 border-b border-border;
+        }
+    }
+}
