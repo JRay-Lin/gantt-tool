@@ -67,20 +67,33 @@ export const GanttChart: FC<GanttChartProps> = ({
                 // Store original styles and make color bands completely opaque
                 const originalOpacity = htmlElement.style.opacity;
                 const originalBg = htmlElement.style.backgroundColor;
-                originalStyles.set(htmlElement, originalOpacity + "|" + originalBg);
-                
+                originalStyles.set(
+                    htmlElement,
+                    originalOpacity + "|" + originalBg
+                );
+
                 // Force opacity to 1 with !important to override Framer Motion
-                htmlElement.style.setProperty('opacity', '1', 'important');
+                htmlElement.style.setProperty("opacity", "1", "important");
                 htmlElement.style.zIndex = "50";
-                
+
                 // Ensure background color is fully opaque (remove any alpha channel)
-                const bgColor = window.getComputedStyle(htmlElement).backgroundColor;
+                const bgColor =
+                    window.getComputedStyle(htmlElement).backgroundColor;
                 if (bgColor) {
-                    const solidColor = bgColor.replace(/rgba?\(([^)]+)\)/, (match, values) => {
-                        const parts = values.split(',').map((v: string) => v.trim());
-                        return `rgb(${parts[0]}, ${parts[1]}, ${parts[2]})`;
-                    });
-                    htmlElement.style.setProperty('background-color', solidColor, 'important');
+                    const solidColor = bgColor.replace(
+                        /rgba?\(([^)]+)\)/,
+                        (_, values) => {
+                            const parts = values
+                                .split(",")
+                                .map((v: string) => v.trim());
+                            return `rgb(${parts[0]}, ${parts[1]}, ${parts[2]})`;
+                        }
+                    );
+                    htmlElement.style.setProperty(
+                        "background-color",
+                        solidColor,
+                        "important"
+                    );
                 }
             } else {
                 // Store original color and modify text colors
@@ -216,7 +229,7 @@ export const GanttChart: FC<GanttChartProps> = ({
     // Calculate responsive font size based on marker spacing
     const getResponsiveTextSize = () => {
         if (timelineMarkers.length < 2) return "text-xs";
-        
+
         const avgSpacing = 100 / (timelineMarkers.length - 1); // Average percentage between markers
         if (avgSpacing < 8) return "text-[10px]"; // Very tight spacing
         if (avgSpacing < 15) return "text-xs"; // Tight spacing
@@ -547,7 +560,9 @@ export const GanttChart: FC<GanttChartProps> = ({
                                         style={{ left: `${marker.position}%` }}
                                     >
                                         <div className="w-px h-full bg-gray-600" />
-                                        <div className={`absolute top-2 left-1 ${responsiveTextClass} font-medium text-muted-foreground whitespace-nowrap z-10`}>
+                                        <div
+                                            className={`absolute top-2 left-1 ${responsiveTextClass} font-medium text-muted-foreground whitespace-nowrap z-10`}
+                                        >
                                             {marker.label}
                                         </div>
                                     </div>
