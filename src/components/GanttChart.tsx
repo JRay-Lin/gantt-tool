@@ -18,6 +18,7 @@ interface GanttChartProps {
     settings: ProjectSettings;
     onToggleExpand: (id: string) => void;
     onUpdateSettings?: (updates: Partial<ProjectSettings>) => void;
+    onReorderTasks?: (tasks: Task[]) => void;
 }
 
 export const GanttChart: FC<GanttChartProps> = ({
