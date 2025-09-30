@@ -51,11 +51,11 @@ export const calculateProjectTimeline = (tasks: Task[]): { start: Date; end: Dat
   
   const minDate = new Date(Math.min(...allDates.map(d => d.getTime())));
   const maxDate = new Date(Math.max(...allDates.map(d => d.getTime())));
-  
-  // Add 10% padding on each side
+
+  // Add 2% padding on each side
   const totalDuration = maxDate.getTime() - minDate.getTime();
-  const padding = totalDuration * 0.1;
-  
+  const padding = totalDuration * 0.02;
+
   return {
     start: new Date(minDate.getTime() - padding),
     end: new Date(maxDate.getTime() + padding)

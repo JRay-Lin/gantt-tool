@@ -208,6 +208,10 @@ function App() {
         );
     };
 
+    const handleReorderTasks = (reorderedTasks: Task[]) => {
+        setTasks(reorderedTasks);
+    };
+
     const handleUpdateSettings = (updates: Partial<ProjectSettings>) => {
         setSettings({ ...settings, ...updates });
     };
@@ -234,6 +238,7 @@ function App() {
                             onUpdateTask={handleUpdateTask}
                             onDeleteTask={handleDeleteTask}
                             onUpdateSettings={handleUpdateSettings}
+                            onReorderTasks={handleReorderTasks}
                         />
                     </div>
                     <div className="chart-column overflow-hidden p-6">
@@ -242,6 +247,7 @@ function App() {
                             settings={settingsWithTimeline}
                             onToggleExpand={handleToggleExpand}
                             onUpdateSettings={handleUpdateSettings}
+                            onReorderTasks={handleReorderTasks}
                         />
                     </div>
                 </div>
