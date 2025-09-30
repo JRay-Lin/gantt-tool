@@ -552,21 +552,31 @@ export const GanttChart: FC<GanttChartProps> = ({
                         </div>
 
                         <div className="timeline-container">
-                            <div className="timeline-header">
-                                {timelineMarkers.map((marker, index) => (
-                                    <div
-                                        key={index}
-                                        className="absolute top-0 h-full flex flex-col justify-center z-50"
-                                        style={{ left: `${marker.position}%` }}
-                                    >
-                                        <div className="w-px h-full bg-gray-600" />
+                            <div className="timeline-header relative">
+                                {timelineMarkers.map((marker, index) => {
+                                    const nextMarker = timelineMarkers[index + 1];
+                                    const width = nextMarker
+                                        ? nextMarker.position - marker.position
+                                        : 100 - marker.position;
+
+                                    return (
                                         <div
-                                            className={`absolute top-2 left-1 ${responsiveTextClass} font-medium text-muted-foreground whitespace-nowrap z-50`}
+                                            key={index}
+                                            className="absolute top-0 h-full flex flex-col items-center justify-center z-40 border-l border-border"
+                                            style={{
+                                                left: `${marker.position}%`,
+                                                width: `${width}%`
+                                            }}
                                         >
-                                            {marker.label}
+                                            <div
+                                                className={`${responsiveTextClass} font-medium text-muted-foreground flex flex-col items-center justify-center text-center leading-tight`}
+                                            >
+                                                <div>{marker.labelLine1}</div>
+                                                <div>{marker.labelLine2}</div>
+                                            </div>
                                         </div>
-                                    </div>
-                                ))}
+                                    );
+                                })}
                             </div>
 
                             <div className="gantt-scroll-wrapper">
@@ -708,37 +718,10 @@ export const GanttChart: FC<GanttChartProps> = ({
                                                                         className={`task-dates ${task.type}-dates`}
                                                                     >
                                                                         {task.startDate.toLocaleDateString()}{" "}
-                                                                        -{" "}
                                                                         {task.endDate.toLocaleDateString()}
                                                                     </div>
                                                                 )}
                                                             </motion.div>
-                                                            {task.level > 0 && (
-                                                                <div
-                                                                    className="task-connector"
-                                                                    style={{
-                                                                        position:
-                                                                            "absolute",
-                                                                        left: `${
-                                                                            (task.level -
-                                                                                1) *
-                                                                                20 +
-                                                                            10
-                                                                        }px`,
-                                                                        top: "20px",
-                                                                        width: `${
-                                                                            task.level *
-                                                                                20 -
-                                                                            10
-                                                                        }px`,
-                                                                        height: "1px",
-                                                                        backgroundColor:
-                                                                            "#ccc",
-                                                                        borderTop:
-                                                                            "1px dashed #999",
-                                                                    }}
-                                                                />
-                                                            )}
                                                         </motion.div>
                                                     );
                                                 })

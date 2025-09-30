@@ -295,37 +295,35 @@ const SortableTaskCard: FC<SortableTaskCardProps> = ({
                         </Button>
                     </div>
                 </div>
-                <div className="task-details-row">
-                    <div className="task-dates-inline flex gap-2">
-                        <div className="flex-1">
-                            <Label className="text-xs text-muted-foreground">
-                                Start
-                            </Label>
-                            <DatePicker
-                                value={task.startDate}
-                                onChange={(date: Date | undefined) =>
-                                    onUpdateTask(task.id, {
-                                        startDate: date,
-                                    })
-                                }
-                                placeholder="Start date"
-                            />
-                        </div>
-                        <div className="flex-1">
-                            <Label className="text-xs text-muted-foreground">
-                                End
-                            </Label>
-                            <DatePicker
-                                value={task.endDate}
-                                onChange={(date: Date | undefined) =>
-                                    onUpdateTask(task.id, {
-                                        endDate: date,
-                                    })
-                                }
-                                placeholder="End date"
-                                minDate={task.startDate}
-                            />
-                        </div>
+                <div className="task-details-row space-y-2">
+                    <div className="task-date-row">
+                        <Label className="text-xs text-muted-foreground">
+                            Start
+                        </Label>
+                        <DatePicker
+                            value={task.startDate}
+                            onChange={(date: Date | undefined) =>
+                                onUpdateTask(task.id, {
+                                    startDate: date,
+                                })
+                            }
+                            placeholder="Start date"
+                        />
+                    </div>
+                    <div className="task-date-row">
+                        <Label className="text-xs text-muted-foreground">
+                            End
+                        </Label>
+                        <DatePicker
+                            value={task.endDate}
+                            onChange={(date: Date | undefined) =>
+                                onUpdateTask(task.id, {
+                                    endDate: date,
+                                })
+                            }
+                            placeholder="End date"
+                            minDate={task.startDate}
+                        />
                     </div>
                 </div>
             </div>
@@ -507,55 +505,51 @@ export const SettingsPanel: FC<SettingsPanelProps> = ({
                                                     </Button>
                                                 </div>
                                             </div>
-                                            <div className="task-details-row">
-                                                <div className="task-dates-inline flex gap-2">
-                                                    <div className="flex-1">
-                                                        <Label className="text-xs text-muted-foreground">
-                                                            Start
-                                                        </Label>
-                                                        <DatePicker
-                                                            value={
-                                                                task.startDate
-                                                            }
-                                                            onChange={(
-                                                                date:
-                                                                    | Date
-                                                                    | undefined
-                                                            ) =>
-                                                                onUpdateTask(
-                                                                    task.id,
-                                                                    {
-                                                                        startDate:
-                                                                            date,
-                                                                    }
-                                                                )
-                                                            }
-                                                            placeholder="Start date"
-                                                        />
-                                                    </div>
-                                                    <div className="flex-1">
-                                                        <Label className="text-xs text-muted-foreground">
-                                                            End
-                                                        </Label>
-                                                        <DatePicker
-                                                            value={task.endDate}
-                                                            onChange={(
-                                                                date:
-                                                                    | Date
-                                                                    | undefined
-                                                            ) =>
-                                                                onUpdateTask(
-                                                                    task.id,
-                                                                    {
-                                                                        endDate:
-                                                                            date,
-                                                                    }
-                                                                )
-                                                            }
-                                                            placeholder="End date"
-                                                            minDate={task.startDate}
-                                                        />
-                                                    </div>
+                                            <div className="task-details-row space-y-2">
+                                                <div className="task-date-row">
+                                                    <Label className="text-xs text-muted-foreground">
+                                                        Start
+                                                    </Label>
+                                                    <DatePicker
+                                                        value={task.startDate}
+                                                        onChange={(
+                                                            date:
+                                                                | Date
+                                                                | undefined
+                                                        ) =>
+                                                            onUpdateTask(
+                                                                task.id,
+                                                                {
+                                                                    startDate:
+                                                                        date,
+                                                                }
+                                                            )
+                                                        }
+                                                        placeholder="Start date"
+                                                    />
+                                                </div>
+                                                <div className="task-date-row">
+                                                    <Label className="text-xs text-muted-foreground">
+                                                        End
+                                                    </Label>
+                                                    <DatePicker
+                                                        value={task.endDate}
+                                                        onChange={(
+                                                            date:
+                                                                | Date
+                                                                | undefined
+                                                        ) =>
+                                                            onUpdateTask(
+                                                                task.id,
+                                                                {
+                                                                    endDate:
+                                                                        date,
+                                                                }
+                                                            )
+                                                        }
+                                                        placeholder="End date"
+                                                        minDate={task.startDate}
+                                                    />
                                                 </div>
                                             </div>
                                         </div>

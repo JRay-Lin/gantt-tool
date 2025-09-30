@@ -33,11 +33,19 @@ export function DatePicker({
     maxDate,
 }: DatePickerProps) {
     const [open, setOpen] = React.useState(false);
+    const [month, setMonth] = React.useState<Date | undefined>(value);
 
     const handleSelect = (selectedDate: Date | undefined) => {
         onChange?.(selectedDate);
         setOpen(false);
     };
+
+    // Update month when value changes or when opening the popover
+    React.useEffect(() => {
+        if (open && value) {
+            setMonth(value);
+        }
+    }, [open, value]);
 
     return (
         <Popover open={open} onOpenChange={setOpen}>
@@ -63,6 +71,8 @@ export function DatePicker({
                     mode="single"
                     selected={value}
                     onSelect={handleSelect}
+                    month={month}
+                    onMonthChange={setMonth}
                     captionLayout="dropdown"
                     disabled={(date) => {
                         if (minDate && date < minDate) return true;

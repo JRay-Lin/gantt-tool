@@ -29,6 +29,8 @@ export const getOptimalTimelineMarkers = (
         markers.push({
             date: new Date(current),
             label: formatMarkerLabel(current, timeScale),
+            labelLine1: formatMarkerLabelLine1(current, timeScale),
+            labelLine2: formatMarkerLabelLine2(current, timeScale),
         });
 
         if (timeScale === "days") {
@@ -57,6 +59,38 @@ const formatMarkerLabel = (date: Date, timeScale: TimeScale): string => {
     } else {
         return date.toLocaleDateString("en-US", {
             month: "short",
+            year: "numeric",
+        });
+    }
+};
+
+const formatMarkerLabelLine1 = (date: Date, timeScale: TimeScale): string => {
+    if (timeScale === "days") {
+        return date.toLocaleDateString("en-US", {
+            month: "short",
+        });
+    } else if (timeScale === "weeks") {
+        return date.toLocaleDateString("en-US", {
+            month: "short",
+        });
+    } else {
+        return date.toLocaleDateString("en-US", {
+            month: "short",
+        });
+    }
+};
+
+const formatMarkerLabelLine2 = (date: Date, timeScale: TimeScale): string => {
+    if (timeScale === "days") {
+        return date.toLocaleDateString("en-US", {
+            day: "numeric",
+        });
+    } else if (timeScale === "weeks") {
+        return date.toLocaleDateString("en-US", {
+            day: "numeric",
+        });
+    } else {
+        return date.toLocaleDateString("en-US", {
             year: "numeric",
         });
     }

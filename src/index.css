@@ -165,7 +165,7 @@
 /* Gantt Chart Layout Styles */
 @layer components {
     .gantt-container {
-        @apply grid grid-cols-[300px_1fr] h-fit max-h-none relative;
+        @apply grid grid-cols-[250px_1fr] h-fit max-h-none relative;
         overflow-y: auto;
         scrollbar-width: thin;
         max-height: calc(100vh - 200px);
@@ -176,12 +176,12 @@
     }
 
     .labels-header {
-        @apply h-16 px-4 flex items-center border-b border-border bg-muted/10;
+        @apply h-12 px-4 flex items-center border-b border-border bg-muted/10;
     }
 
     .labels-content {
         @apply relative overflow-hidden max-h-full;
-        height: calc(100% - 64px); /* Subtract header height */
+        height: calc(100% - 48px); /* Subtract header height */
         will-change: scroll-position;
     }
 
@@ -222,12 +222,12 @@
     }
 
     .timeline-header {
-        @apply relative h-16 border-b border-border bg-muted/10 z-40;
+        @apply relative h-12 border-b border-border bg-muted/10 z-40;
     }
 
     .gantt-scroll-wrapper {
         @apply overflow-hidden max-h-full;
-        height: calc(100% - 64px); /* Subtract header height */
+        height: calc(100% - 48px); /* Subtract header height */
         will-change: scroll-position;
     }
 
